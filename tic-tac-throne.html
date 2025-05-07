@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIC TAC THRONE SECRET</title>
+  <style>
+    :root {
+      --primary: #00ffff;
+      --secondary: #ff00ff;
+      --accent1: #ffff00;
+      --accent2: #00ff00;
+      --accent3: #ff0066;
+      --background: #0a0a1a;
+      --text: #ffffff;
+      --grid: #1a1a3a;
+      --noob: #33ff33;
+      --easy: #00ffaa;
+      --medium: #ffff00;
+      --hard: #ff9900;
+      --extreme: #ff3300;
+      --insane: #ff00ff;
+      --impossible: #ff0000;
+      --secret: #ff00ff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    .neon-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .neon-particle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(3px);
+      opacity: 0.3;
+      box-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+      animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0) rotate(0); }
+      50% { transform: translateY(-50vh) translateX(50px) rotate(180deg); }
+      100% { transform: translateY(-100vh) translateX(0) rotate(360deg); }
+    }
+    
+    .game-container {
+      background: rgba(10, 10, 26, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 
+                  0 0 60px rgba(255, 0, 255, 0.3);
+      width: 90%;
+      max-width: 500px;
+      z-index: 1;
+      border: 2px solid;
+      border-image: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent1), var(--accent2)) 1;
+      transition: all 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .game-container.secret-mode {
+      border-image: linear-gradient(45deg, var(--secret), var(--accent1), var(--secret), var(--accent1)) 1;
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 
+                 0 0 60px rgba(255, 0, 255, 0.5),
+                 0 0 90px rgba(255, 0, 255, 0.3);
+      animation: secret-pulse 2s infinite alternate;
+    }
+    
+    @keyframes secret-pulse {
+      0% { 
+        box-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 
+                   0 0 60px rgba(255, 0, 255, 0.5);
+      }
+      100% { 
+        box-shadow: 0 0 40px rgba(255, 0, 255, 0.9), 
+                   0 0 80px rgba(255, 0, 255, 0.7),
+                   0 0 120px rgba(255, 0, 255, 0.5);
+      }
+    }
+    
+    .game-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(0, 255, 255, 0.05) 30%,
+        rgba(255, 0, 255, 0.05) 50%,
+        transparent 70%
+      );
+      transform: rotate(45deg);
+      animation: shine 10s infinite linear;
+      pointer-events: none;
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      position: relative;
+      text-shadow: 
+        0 0 5px var(--primary),
+        0 0 10px var(--primary),
+        0 0 20px var(--primary);
+      animation: neon-title 1.5s infinite alternate;
+    }
+    
+    .secret-mode h1 {
+      text-shadow: 
+        0 0 5px var(--secret),
+        0 0 10px var(--secret),
+        0 0 20px var(--secret);
+      animation: secret-title 1.5s infinite alternate;
+    }
+    
+    @keyframes secret-title {
+      0% {
+        text-shadow: 
+          0 0 5px var(--secret),
+          0 0 15px var(--secret),
+          0 0 25px var(--secret);
+        transform: scale(1);
+      }
+      100% {
+        text-shadow: 
+          0 0 10px var(--secret),
+          0 0 20px var(--secret),
+          0 0 40px var(--secret);
+        transform: scale(1.05);
+      }
+    }
+    
+    @keyframes neon-title {
+      0% {
+        text-shadow: 
+          0 0 5px var(--primary),
+          0 0 10px var(--primary),
+          0 0 15px var(--primary),
+          0 0 20px var(--primary);
+      }
+      100% {
+        text-shadow: 
+          0 0 5px var(--primary),
+          0 0 15px var(--primary),
+          0 0 25px var(--primary),
+          0 0 35px var(--primary);
+      }
+    }
+    
+    .author {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent1);
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px var(--accent1);
+    }
+    
+    .difficulty {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .difficulty button {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid;
+      border-radius: 10px;
+      padding: 0.5rem 0.2rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      text-shadow: 0 0 5px currentColor;
+    }
+    
+    .difficulty button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      transition: all 0.4s ease;
+      z-index: -1;
+    }
+    
+    .difficulty button:hover::before {
+      left: 0;
+    }
+    
+    .difficulty button:active {
+      transform: scale(0.95);
+    }
+    
+    #noob {
+      border-color: var(--noob);
+      color: var(--noob);
+    }
+    
+    #noob::before {
+      background: var(--noob);
+    }
+    
+    #easy {
+      border-color: var(--easy);
+      color: var(--easy);
+    }
+    
+    #easy::before {
+      background: var(--easy);
+    }
+    
+    #medium {
+      border-color: var(--medium);
+      color: var(--medium);
+    }
+    
+    #medium::before {
+      background: var(--medium);
+    }
+    
+    #hard {
+      border-color: var(--hard);
+      color: var(--hard);
+    }
+    
+    #hard::before {
+      background: var(--hard);
+    }
+    
+    #extreme {
+      border-color: var(--extreme);
+      color: var(--extreme);
+    }
+    
+    #extreme::before {
+      background: var(--extreme);
+    }
+    
+    #insane {
+      border-color: var(--insane);
+      color: var(--insane);
+    }
+    
+    #insane::before {
+      background: var(--insane);
+    }
+    
+    #impossible {
+      border-color: var(--impossible);
+      color: var(--impossible);
+    }
+    
+    #impossible::before {
+      background: var(--impossible);
+    }
+    
+    .difficulty button:hover {
+      color: var(--background);
+    }
+    
+    .difficulty button.active {
+      color: var(--background);
+      box-shadow: 0 0 15px currentColor;
+    }
+    
+    #noob.active {
+      background-color: var(--noob);
+      box-shadow: 0 0 15px var(--noob), 0 0 30px var(--noob);
+    }
+    
+    #easy.active {
+      background-color: var(--easy);
+      box-shadow: 0 0 15px var(--easy), 0 0 30px var(--easy);
+    }
+    
+    #medium.active {
+      background-color: var(--medium);
+      box-shadow: 0 0 15px var(--medium), 0 0 30px var(--medium);
+    }
+    
+    #hard.active {
+      background-color: var(--hard);
+      box-shadow: 0 0 15px var(--hard), 0 0 30px var(--hard);
+    }
+    
+    #extreme.active {
+      background-color: var(--extreme);
+      box-shadow: 0 0 15px var(--extreme), 0 0 30px var(--extreme);
+    }
+    
+    #insane.active {
+      background-color: var(--insane);
+      box-shadow: 0 0 15px var(--insane), 0 0 30px var(--insane);
+    }
+    
+    #impossible.active {
+      background-color: var(--impossible);
+      box-shadow: 0 0 15px var(--impossible), 0 0 30px var(--impossible);
+    }
+    
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      aspect-ratio: 1/1;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .board::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 0, 0, 0.15);
+      border-radius: 10px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+    
+    @keyframes ai-thinking-pulse {
+      0% { opacity: 0.15; box-shadow: 0 0 10px rgba(255, 0, 0, 0.3); }
+      50% { opacity: 0.3; box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); }
+      100% { opacity: 0.15; box-shadow: 0 0 10px rgba(255, 0, 0, 0.3); }
+    }
+    
+    .board.ai-turn::before {
+      opacity: 1;
+      animation: ai-thinking-pulse 1.5s infinite;
+    }
+    
+    .secret-mode .board.ai-turn::before {
+      background: rgba(255, 0, 255, 0.25);
+      animation: secret-ai-thinking-pulse 1.5s infinite;
+    }
+    
+    @keyframes secret-ai-thinking-pulse {
+      0% { opacity: 0.25; box-shadow: 0 0 10px rgba(255, 0, 255, 0.3); }
+      50% { opacity: 0.4; box-shadow: 0 0 30px rgba(255, 0, 255, 0.5); }
+      100% { opacity: 0.25; box-shadow: 0 0 10px rgba(255, 0, 255, 0.3); }
+    }
+    
+    .board.ai-turn .cell {
+      cursor: not-allowed;
+    }
+    
+    .secret-mode .board.ai-turn .cell {
+      cursor: pointer;
+    }
+    
+    .cell {
+      background-color: var(--grid);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      cursor: pointer;
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 5px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .cell:hover {
+      transform: scale(1.03);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 255, 0.5);
+    }
+    
+    .secret-mode .cell.o:hover {
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 0, 255, 0.8);
+      filter: brightness(0.7);
+    }
+    
+    /* X symbol */
+    .cell.x {
+      position: relative;
+    }
+    
+    .cell.x::before, 
+    .cell.x::after {
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 15px;
+      animation: x-glow 2s infinite alternate;
+      box-shadow: 
+        0 0 5px var(--accent3),
+        0 0 10px var(--accent3),
+        0 0 15px var(--accent3);
+      border-radius: 5px;
+      opacity: 0;
+    }
+    
+    .cell.x::before {
+      background: linear-gradient(90deg, var(--accent3), var(--primary));
+      transform: rotate(45deg);
+      animation-name: x-animation-1;
+    }
+    
+    .cell.x::after {
+      background: linear-gradient(90deg, var(--primary), var(--accent3));
+      transform: rotate(-45deg);
+      animation-name: x-animation-2;
+    }
+    
+    @keyframes x-animation-1 {
+      0% {
+        opacity: 0;
+        width: 0;
+        transform: rotate(45deg) scale(0.5);
+      }
+      50% {
+        opacity: 1;
+        width: 80%;
+        transform: rotate(45deg) scale(1.2);
+      }
+      100% {
+        opacity: 1;
+        width: 70%;
+        transform: rotate(45deg) scale(1);
+      }
+    }
+    
+    @keyframes x-animation-2 {
+      0% {
+        opacity: 0;
+        width: 0;
+        transform: rotate(-45deg) scale(0.5);
+      }
+      50% {
+        opacity: 0.3;
+        width: 0;
+        transform: rotate(-45deg) scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        width: 70%;
+        transform: rotate(-45deg) scale(1);
+      }
+    }
+    
+    @keyframes x-glow {
+      0% {
+        box-shadow: 
+          0 0 5px var(--accent3),
+          0 0 10px var(--accent3),
+          0 0 15px var(--accent3);
+      }
+      100% {
+        box-shadow: 
+          0 0 10px var(--accent3),
+          0 0 20px var(--accent3),
+          0 0 30px var(--accent3);
+      }
+    }
+    
+    /* O symbol */
+    .cell.o {
+      position: relative;
+    }
+    
+    .cell.o::before,
+    .cell.o::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+    }
+    
+    .cell.o::before {
+      width: 60%;
+      height: 60%;
+      border: 12px solid;
+      border-color: var(--secondary) transparent var(--accent2) transparent;
+      animation: o-animation-1 0.8s forwards, o-spin 3s infinite linear;
+    }
+    
+    .cell.o::after {
+      width: 58%;
+      height: 58%;
+      border: 8px solid;
+      border-color: transparent var(--primary) transparent var(--accent1);
+      animation: o-animation-2 1s forwards, o-spin-reverse 5s infinite linear;
+    }
+    
+    @keyframes o-animation-1 {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      70% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(360deg);
+      }
+    }
+    
+    @keyframes o-animation-2 {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      50% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(-180deg);
+      }
+    }
+    
+    @keyframes o-spin {
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes o-spin-reverse {
+      100% { transform: rotate(-360deg); }
+    }
+    
+    .cell.win {
+      animation: win-pulse 1s infinite;
+      z-index: 2;
+    }
+    
+    @keyframes win-pulse {
+      0% { 
+        box-shadow: 0 0 15px var(--accent2);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 25px var(--accent2), 0 0 40px var(--accent2);
+        transform: scale(1.05);
+      }
+      100% { 
+        box-shadow: 0 0 15px var(--accent2);
+        transform: scale(1);
+      }
+    }
+    
+    .secret-mode .cell.win {
+      animation: secret-win-pulse 1s infinite;
+    }
+    
+    @keyframes secret-win-pulse {
+      0% { 
+        box-shadow: 0 0 15px var(--secret);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 25px var(--secret), 0 0 40px var(--secret);
+        transform: scale(1.05);
+      }
+      100% { 
+        box-shadow: 0 0 15px var(--secret);
+        transform: scale(1);
+      }
+    }
+    
+    .status {
+      text-align: center;
+      font-size: 1.5rem;
+      height: 2rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px var(--text);
+    }
+    
+    .secret-status {
+      text-align: center;
+      font-size: 1rem;
+      height: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--secret);
+      opacity: 0;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px var(--secret);
+    }
+    
+    .secret-mode .secret-status {
+      opacity: 1;
+      animation: secret-text-pulse 2s infinite alternate;
+    }
+    
+    @keyframes secret-text-pulse {
+      0% { 
+        text-shadow: 0 0 5px var(--secret);
+        transform: scale(1);
+      }
+      100% { 
+        text-shadow: 0 0 15px var(--secret);
+        transform: scale(1.05);
+      }
+    }
+    
+    .score-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    
+    .score {
+      text-align: center;
+      padding: 0.8rem 1.5rem;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 10px;
+      min-width: 100px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    
+    .score::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(45deg);
+      animation: score-shine 3s infinite linear;
+    }
+    
+    @keyframes score-shine {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    .score:first-child {
+      background: rgba(255, 0, 255, 0.1);
+      border: 1px solid rgba(255, 0, 255, 0.2);
+    }
+    
+    .score span {
+      font-size: 1.8rem;
+      font-weight: bold;
+      display: block;
+      margin-top: 0.3rem;
+      text-shadow: 0 0 10px currentColor;
+    }
+    
+    .score:first-child span {
+      color: var(--accent3);
+      text-shadow: 
+        0 0 5px var(--accent3),
+        0 0 10px var(--accent3);
+    }
+    
+    .score:last-child span {
+      color: var(--secondary);
+      text-shadow: 
+        0 0 5px var(--secondary),
+        0 0 10px var(--secondary);
+    }
+    
+    .difficulty-display {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+      text-shadow: 0 0 5px currentColor;
+      transition: color 0.3s ease;
+    }
+    
+    .buttons {
+      display: flex;
+      justify-content: center;
+    }
+    
+    #reset {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--text);
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 2rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .secret-mode #reset {
+      background: linear-gradient(45deg, var(--secret), var(--accent1));
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+    }
+    
+    #reset::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(45deg);
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+    
+    #reset:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
+    }
+    
+    .secret-mode #reset:hover {
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(255, 0, 255, 0.4);
+    }
+    
+    #reset:hover::before {
+      animation: btn-shine 1s;
+    }
+    
+    @keyframes btn-shine {
+      0% { 
+        opacity: 1;
+        left: -50%;
+      }
+      100% { 
+        opacity: 0;
+        left: 100%;
+      }
+    }
+    
+    #reset:active {
+      transform: translateY(0);
+    }
+    
+    .game-over {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 26, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    
+    .game-over.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .game-over h2 {
+      font-size: 3.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: victory-text 2s infinite alternate;
+    }
+    
+    @keyframes victory-text {
+      0% {
+        text-shadow: 
+          0 0 5px var(--primary),
+          0 0 15px var(--primary),
+          0 0 25px var(--primary),
+          0 0 35px var(--primary);
+        transform: scale(1);
+      }
+      100% {
+        text-shadow: 
+          0 0 5px var(--secondary),
+          0 0 15px var(--secondary),
+          0 0 25px var(--secondary),
+          0 0 35px var(--secondary);
+        transform: scale(1.05);
+      }
+    }
+    
+    .game-over button {
+      background: linear-gradient(45deg, var(--accent1), var(--accent2));
+      color: var(--background);
+      border: none;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .game-over button::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(45deg);
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+    
+    .game-over button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 255, 0, 0.7);
+    }
+    
+    .game-over button:hover::before {
+      animation: btn-shine 1s;
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      z-index: 99;
+    }
+    
+    @keyframes confetti-fall {
+      0% {
+        opacity: 1;
+        top: -10px;
+        transform: translateX(0) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        top: 100vh;
+        transform: translateX(var(--tx)) rotate(var(--tr));
+      }
+    }
+    
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+    }
+    
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    /* Explosion effect for cells */
+    @keyframes explosion {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(2);
+      }
+    }
+    
+    .explosion {
+      position: absolute;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        var(--accent2) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+    }
+    
+    .secret-mode .explosion {
+      background: radial-gradient(
+        circle,
+        var(--secret) 0%,
+        transparent 70%
+      );
+    }
+    
+    .crown {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 5px var(--accent1));
+      opacity: 0;
+      transition: all 0.3s ease;
+      animation: crown-bounce 1s infinite alternate;
+    }
+    
+    @keyframes crown-bounce {
+      0% { transform: translateX(-50%) scale(1); }
+      100% { transform: translateX(-50%) scale(1.1); }
+    }
+    
+    /* Secret mode activation animation */
+    @keyframes secret-activate {
+      0% { 
+        transform: scale(1);
+        filter: hue-rotate(0deg);
+      }
+      50% { 
+        transform: scale(1.1);
+        filter: hue-rotate(180deg);
+      }
+      100% { 
+        transform: scale(1);
+        filter: hue-rotate(360deg);
+      }
+    }
+    
+    /* Adding a special effect to indicate overwritten cells */
+    .cell.overwritten {
+      position: relative;
+    }
+    
+    .cell.overwritten::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 0, 255, 0.7) 0%,
+        transparent 70%
+      );
+      animation: overwrite-pulse 2s infinite;
+      border-radius: 10px;
+    }
+    
+    @keyframes overwrite-pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    
+    @media (max-width: 500px) {
+      .game-container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .author {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      
+      .difficulty {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .difficulty button {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.1rem;
+      }
+      
+      .cell {
+        font-size: 2.5rem;
+      }
+      
+      .status {
+        font-size: 1.2rem;
+      }
+      
+      .score-container {
+        font-size: 1rem;
+      }
+      
+      .score span {
+        font-size: 1.2rem;
+      }
+      
+      #reset {
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .game-over h2 {
+        font-size: 2.5rem;
+      }
+      
+      .game-over button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="neon-particles"></div>
+  
+  <div class="game-container">
+    <h1>TIC TAC THRONE</h1>
+    <div class="author">By Matteo Panicaldi</div>
+    
+    <div class="difficulty">
+      <button id="noob" class="active">NOOB</button>
+      <button id="easy">EASY</button>
+      <button id="medium">MEDIUM</button>
+      <button id="hard">HARD</button>
+      <button id="extreme">EXTREME</button>
+      <button id="insane">INSANE</button>
+      <button id="impossible">IMPOSSIBILE</button>
+    </div>
+    
+    <div class="board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+    
+    <div class="status">Il tuo turno!</div>
+    <div class="secret-status">MODALITÀ SEGRETA: Puoi sovrascrivere le mosse dell'AI!</div>
+    
+    <div class="score-container">
+      <div class="score">
+        TU (X)
+        <span id="player-score">0</span>
+      </div>
+      <div class="score">
+        AI (O)
+        <span id="ai-score">0</span>
+      </div>
+    </div>
+    
+    <div id="difficulty-display" class="difficulty-display">
+      Difficoltà: NOOB
+    </div>
+    
+    <div class="buttons">
+      <button id="reset">RIGIOCA</button>
+    </div>
+  </div>
+  
+  <div class="game-over">
+    <h2>VITTORIA!</h2>
+    <button id="play-again">GIOCA ANCORA</button>
+  </div>
+
+  <script>
+    // Game state
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'x'; // Player is X, AI is O
+    let gameActive = true;
+    let difficulty = 'noob';
+    let boardLocked = false; // Flag to prevent player moves during AI turn
+    let scores = {
+      player: 0,
+      ai: 0
+    };
+    
+    // Secret mode variables
+    let resetClickCount = 0;
+    let lastResetClickTime = 0;
+    let secretModeActive = false;
+    
+    // DOM elements
+    const cells = document.querySelectorAll('.cell');
+    const statusDisplay = document.querySelector('.status');
+    const resetButton = document.getElementById('reset');
+    const playerScoreDisplay = document.getElementById('player-score');
+    const aiScoreDisplay = document.getElementById('ai-score');
+    const difficultyButtons = document.querySelectorAll('.difficulty button');
+    const difficultyDisplay = document.getElementById('difficulty-display');
+    const gameOverScreen = document.querySelector('.game-over');
+    const gameOverText = document.querySelector('.game-over h2');
+    const playAgainButton = document.getElementById('play-again');
+    const neonParticlesContainer = document.querySelector('.neon-particles');
+    const gameContainer = document.querySelector('.game-container');
+    
+    // Create neon particles
+    function createNeonParticles() {
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('neon-particle');
+        
+        const size = Math.random() * 12 + 3;
+        const color = getRandomNeonColor();
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.color = color;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}vh`;
+        
+        // Randomize animation duration and delay
+        const duration = Math.random() * 25 + 10;
+        const delay = Math.random() * 20;
+        
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `-${delay}s`;
+        
+        neonParticlesContainer.appendChild(particle);
+      }
+    }
+    
+    function getRandomNeonColor() {
+      const colors = [
+        '#00ffff', // Cyan
+        '#ff00ff', // Magenta
+        '#ffff00', // Yellow
+        '#00ff00', // Green
+        '#ff0066', // Pink
+        '#ff6600', // Orange
+        '#9900ff'  // Purple
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    createNeonParticles();
+    
+    // Winning combinations
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    
+    // Initialize game
+    function initGame() {
+      cells.forEach(cell => {
+        cell.addEventListener('click', cellClicked);
+        cell.addEventListener('mousedown', createRippleEffect);
+      });
+      
+      resetButton.addEventListener('click', handleResetClick);
+      playAgainButton.addEventListener('click', closeGameOverScreen);
+      
+      difficultyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          difficultyButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          difficulty = button.id;
+          difficultyDisplay.textContent = `Difficoltà: ${button.id.toUpperCase()}`;
+          difficultyDisplay.style.color = `var(--${button.id})`;
+          resetGame();
+        });
+      });
+      
+      // Set initial difficulty display
+      difficultyDisplay.style.color = 'var(--noob)';
+    }
+    
+    // Secret mode activation
+    function handleResetClick() {
+      const currentTime = Date.now();
+      
+      // Check if this click is within 3 seconds of the last one
+      if (currentTime - lastResetClickTime < 3000) {
+        resetClickCount++;
+        
+        // If 5 clicks within 3 seconds, activate secret mode
+        if (resetClickCount >= 5 && !secretModeActive) {
+          activateSecretMode();
+        }
+      } else {
+        // Reset counter if more than 3 seconds have passed
+        resetClickCount = 1;
+      }
+      
+      lastResetClickTime = currentTime;
+      resetGame();
+    }
+    
+    // Activate secret mode
+    function activateSecretMode() {
+      secretModeActive = true;
+      gameContainer.classList.add('secret-mode');
+      
+      // Add special animation
+      gameContainer.style.animation = 'secret-activate 1s';
+      
+      // Create special effect
+      createSecretModeEffect();
+      
+      setTimeout(() => {
+        gameContainer.style.animation = '';
+      }, 1000);
+      
+      // Alert user about secret mode
+      statusDisplay.textContent = "MODALITÀ SEGRETA ATTIVATA!";
+      
+      setTimeout(() => {
+        statusDisplay.textContent = "Il tuo turno!";
+      }, 2000);
+    }
+    
+    // Create special effect for secret mode activation
+    function createSecretModeEffect() {
+      // Create matrix-like rain of characters
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => {
+          const character = document.createElement('div');
+          character.style.position = 'fixed';
+          character.style.color = 'var(--secret)';
+          character.style.fontSize = '20px';
+          character.style.fontFamily = 'monospace';
+          character.style.textShadow = '0 0 5px var(--secret)';
+          character.style.zIndex = '1000';
+          character.style.pointerEvents = 'none';
+          character.textContent = String.fromCharCode(33 + Math.floor(Math.random() * 94));
+          character.style.left = `${Math.random() * 100}vw`;
+          character.style.top = '-20px';
+          
+          document.body.appendChild(character);
+          
+          // Animate the character falling
+          character.animate(
+            [
+              { transform: 'translateY(0)', opacity: 1 },
+              { transform: `translateY(${window.innerHeight}px)`, opacity: 0 }
+            ],
+            {
+              duration: 1000 + Math.random() * 2000,
+              easing: 'linear'
+            }
+          );
+          
+          // Remove after animation
+          setTimeout(() => {
+            character.remove();
+          }, 3000);
+        }, i * 10);
+      }
+      
+      // Create glitch effect for the title
+      const title = document.querySelector('h1');
+      const originalText = title.textContent;
+      
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          // Scramble text
+          let scrambledText = '';
+          for (let j = 0; j < originalText.length; j++) {
+            if (Math.random() < 0.5) {
+              scrambledText += String.fromCharCode(33 + Math.floor(Math.random() * 94));
+            } else {
+              scrambledText += originalText[j];
+            }
+          }
+          title.textContent = scrambledText;
+          
+          // Restore after short delay
+          setTimeout(() => {
+            title.textContent = originalText;
+          }, 50);
+        }, i * 100);
+      }
+    }
+    
+    // Create ripple effect
+    function createRippleEffect(e) {
+      if (boardLocked && !secretModeActive) return;
+      
+      const cell = e.target;
+      
+      const rect = cell.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      cell.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    }
+    
+    // Handle cell click
+    function cellClicked(e) {
+      const cell = e.target;
+      const index = parseInt(cell.getAttribute('data-index'));
+      
+      // Secret mode: can overwrite AI moves
+      if (secretModeActive) {
+        // If cell is already O and board is not locked, allow overwriting
+        if (board[index] === 'o' && gameActive) {
+          // Clear the cell before making a move
+          clearCell(cell, index);
+          cell.classList.add('overwritten');
+          
+          // Now make player's move
+          setTimeout(() => {
+            updateCell(cell, index);
+            createExplosionEffect(cell);
+            
+            if (checkWin(board, 'x')) {
+              endGame('player');
+              return;
+            }
+            
+            if (checkDraw()) {
+              endGame('draw');
+              return;
+            }
+            
+            // AI's turn
+            makeAIMove();
+          }, 300);
+          
+          return;
+        }
+      }
+      
+      // Normal game mode rules
+      if (boardLocked || board[index] !== '' || !gameActive) return;
+      
+      updateCell(cell, index);
+      createExplosionEffect(cell);
+      
+      if (checkWin(board, 'x')) {
+        endGame('player');
+        return;
+      }
+      
+      if (checkDraw()) {
+        endGame('draw');
+        return;
+      }
+      
+      makeAIMove();
+    }
+    
+    // Make AI move
+    function makeAIMove() {
+      // Lock the board and update UI to show AI's turn
+      boardLocked = true;
+      statusDisplay.textContent = "AI sta pensando...";
+      
+      // Add visual indication that board is locked
+      document.querySelector('.board').classList.add('ai-turn');
+      
+      // AI's turn after a short delay
+      setTimeout(() => {
+        if (gameActive) {
+          aiMove();
+          
+          if (checkWin(board, 'o')) {
+            endGame('ai');
+            return;
+          }
+          
+          if (checkDraw()) {
+            endGame('draw');
+            return;
+          }
+          
+          // Unlock the board and update UI
+          boardLocked = false;
+          statusDisplay.textContent = "Il tuo turno!";
+          document.querySelector('.board').classList.remove('ai-turn');
+        }
+      }, 1000);
+    }
+    
+    // Clear a cell (used for overwriting in secret mode)
+    function clearCell(cell, index) {
+      board[index] = '';
+      cell.className = 'cell';
+      
+      // Remove any children (animation elements)
+      while (cell.firstChild) {
+        cell.removeChild(cell.firstChild);
+      }
+    }
+    
+    // Create explosion effect
+    function createExplosionEffect(cell) {
+      const explosion = document.createElement('div');
+      explosion.classList.add('explosion');
+      
+      cell.appendChild(explosion);
+      
+      explosion.style.animation = 'explosion 0.5s forwards';
+      
+      setTimeout(() => {
+        explosion.remove();
+      }, 500);
+    }
+    
+    // Update cell with player's move
+    function updateCell(cell, index, isAI = false) {
+      const symbol = isAI ? 'o' : 'x';
+      board[index] = symbol;
+      cell.classList.add(symbol);
+      
+      // Add explosion effect for AI
+      if (isAI) {
+        setTimeout(() => {
+          createExplosionEffect(cell);
+        }, 100);
+      }
+      
+      // Add crown effect for winner
+      if (symbol === 'x' && Math.random() < 0.3) {
+        addCrownEffect(cell);
+      }
+    }
+    
+    // Add crown effect
+    function addCrownEffect(cell) {
+      const crown = document.createElement('div');
+      crown.classList.add('crown');
+      crown.textContent = '👑';
+      
+      cell.appendChild(crown);
+      
+      setTimeout(() => {
+        crown.style.opacity = '1';
+        
+        setTimeout(() => {
+          crown.style.opacity = '0';
+          
+          setTimeout(() => {
+            crown.remove();
+          }, 300);
+        }, 1500);
+      }, 100);
+    }
+    
+    // AI move based on difficulty
+    function aiMove() {
+      let index;
+      
+      switch (difficulty) {
+        case 'noob':
+          index = noobAIMove();
+          break;
+        case 'easy':
+          index = easyAIMove();
+          break;
+        case 'medium':
+          index = mediumAIMove();
+          break;
+        case 'hard':
+          index = hardAIMove();
+          break;
+        case 'extreme':
+          index = extremeAIMove();
+          break;
+        case 'insane':
+          index = insaneAIMove();
+          break;
+        case 'impossible':
+          index = impossibleAIMove();
+          break;
+        default:
+          index = noobAIMove();
+      }
+      
+      updateCell(cells[index], index, true);
+    }
+    
+    // NOOB AI: Random moves with deliberate mistakes
+    function noobAIMove() {
+      const emptyCells = board.reduce((acc, cell, index) => {
+        if (cell === '') acc.push(index);
+        return acc;
+      }, []);
+      
+      // 30% chance to avoid winning moves and 70% chance to miss blocking player wins
+      const winMove = findWinningMove('o');
+      const blockMove = findWinningMove('x');
+      
+      if (winMove !== -1 && Math.random() > 0.3) {
+        return winMove;
+      }
+      
+      if (blockMove !== -1 && Math.random() > 0.7) {
+        return blockMove;
+      }
+      
+      // Avoid center 50% of the time
+      if (board[4] === '' && Math.random() < 0.5) {
+        const nonCenterCells = emptyCells.filter(idx => idx !== 4);
+        if (nonCenterCells.length > 0) {
+          return nonCenterCells[Math.floor(Math.random() * nonCenterCells.length)];
+        }
+      }
+      
+      return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    }
+    
+    // Easy AI: random moves
+    function easyAIMove() {
+      const emptyCells = board.reduce((acc, cell, index) => {
+        if (cell === '') acc.push(index);
+        return acc;
+      }, []);
+      
+      return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    }
+    
+    // Medium AI: block player wins, otherwise random
+    function mediumAIMove() {
+      // Try to win if possible
+      const winMove = findWinningMove('o');
+      if (winMove !== -1) return winMove;
+      
+      // Block player if they're about to win
+      const blockMove = findWinningMove('x');
+      if (blockMove !== -1) return blockMove;
+      
+      // Take center if available
+      if (board[4] === '') return 4;
+      
+      // Otherwise random move
+      return easyAIMove();
+    }
+    
+    // Hard AI: uses minimax algorithm with limited depth
+    function hardAIMove() {
+      // First try immediate win
+      const winMove = findWinningMove('o');
+      if (winMove !== -1) return winMove;
+      
+      // Then try immediate block
+      const blockMove = findWinningMove('x');
+      if (blockMove !== -1) return blockMove;
+      
+      // If first move, prefer center or corners
+      const emptyCells = board.filter(cell => cell === '').length;
+      if (emptyCells >= 7) {
+        if (board[4] === '') return 4; // Center
+        const corners = [0, 2, 6, 8].filter(idx => board[idx] === '');
+        if (corners.length > 0) {
+          return corners[Math.floor(Math.random() * corners.length)];
+        }
+      }
+      
+      // Otherwise use minimax with limited depth
+      let bestScore = -Infinity;
+      let bestMove = -1;
+      
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+          board[i] = 'o';
+          const score = minimax(board, 0, false, 2); // Limited to depth 2
+          board[i] = '';
+          
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        }
+      }
+      
+      return bestMove;
+    }
+    
+    // Extreme AI: uses minimax with moderate depth and occasional mistakes
+    function extremeAIMove() {
+      // First try immediate win
+      const winMove = findWinningMove('o');
+      if (winMove !== -1) return winMove;
+      
+      // Then try immediate block
+      const blockMove = findWinningMove('x');
+      if (blockMove !== -1) return blockMove;
+      
+      // Always take center first if available
+      if (board[4] === '') return 4;
+      
+      // 10% chance to make a less optimal move
+      if (Math.random() < 0.1) {
+        const emptyCells = board.reduce((acc, cell, index) => {
+          if (cell === '') acc.push(index);
+          return acc;
+        }, []);
+        return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      }
+      
+      // Use minimax with moderate depth
+      let bestScore = -Infinity;
+      let bestMove = -1;
+      
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+          board[i] = 'o';
+          const score = minimax(board, 0, false, 4); // Depth 4
+          board[i] = '';
+          
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        }
+      }
+      
+      return bestMove;
+    }
+    
+    // Insane AI: uses minimax with high depth
+    function insaneAIMove() {
+      // First try immediate win
+      const winMove = findWinningMove('o');
+      if (winMove !== -1) return winMove;
+      
+      // Then try immediate block
+      const blockMove = findWinningMove('x');
+      if (blockMove !== -1) return blockMove;
+      
+      // Always take center first if available
+      if (board[4] === '') return 4;
+      
+      // 5% chance to make a less optimal move
+      if (Math.random() < 0.05) {
+        return extremeAIMove();
+      }
+      
+      // Use minimax with high depth
+      let bestScore = -Infinity;
+      let bestMove = -1;
+      
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+          board[i] = 'o';
+          const score = minimax(board, 0, false, 8); // Higher depth
+          board[i] = '';
+          
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        }
+      }
+      
+      return bestMove;
+    }
+    
+    // Impossible AI: uses minimax algorithm with unlimited depth
+    function impossibleAIMove() {
+      // First try immediate win
+      const winMove = findWinningMove('o');
+      if (winMove !== -1) return winMove;
+      
+      // Then try immediate block
+      const blockMove = findWinningMove('x');
+      if (blockMove !== -1) return blockMove;
+      
+      // Always take center first if available
+      if (board[4] === '') return 4;
+      
+      // Use full depth minimax for perfect play
+      let bestScore = -Infinity;
+      let bestMove = -1;
+      
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+          board[i] = 'o';
+          const score = minimax(board, 0, false, Infinity); // Max depth
+          board[i] = '';
+          
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        }
+      }
+      
+      return bestMove;
+    }
+    
+    // Find winning move for a player
+    function findWinningMove(player) {
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+          board[i] = player;
+          const isWin = checkWin(board, player);
+          board[i] = '';
+          
+          if (isWin) return i;
+        }
+      }
+      
+      return -1;
+    }
+    
+    // Minimax algorithm for unbeatable AI
+    function minimax(board, depth, isMaximizing, maxDepth = Infinity) {
+      // Check terminal states
+      if (checkWin(board, 'o')) return 10 - depth;
+      if (checkWin(board, 'x')) return depth - 10;
+      if (board.every(cell => cell !== '')) return 0;
+      
+      // Limit search depth
+      if (depth >= maxDepth) {
+        // Simple heuristic if we hit depth limit
+        return evaluateBoard(board);
+      }
+      
+      if (isMaximizing) {
+        let bestScore = -Infinity;
+        
+        for (let i = 0; i < 9; i++) {
+          if (board[i] === '') {
+            board[i] = 'o';
+            const score = minimax(board, depth + 1, false, maxDepth);
+            board[i] = '';
+            bestScore = Math.max(score, bestScore);
+          }
+        }
+        
+        return bestScore;
+      } else {
+        let bestScore = Infinity;
+        
+        for (let i = 0; i < 9; i++) {
+          if (board[i] === '') {
+            board[i] = 'x';
+            const score = minimax(board, depth + 1, true, maxDepth);
+            board[i] = '';
+            bestScore = Math.min(score, bestScore);
+          }
+        }
+        
+        return bestScore;
+      }
+    }
+    
+    // Simple board evaluation for depth-limited minimax
+    function evaluateBoard(board) {
+      // Check potential winning lines
+      let score = 0;
+      
+      // Evaluate each winning condition
+      winningConditions.forEach(condition => {
+        const [a, b, c] = condition;
+        const line = [board[a], board[b], board[c]];
+        
+        // Count symbols in the line
+        const xCount = line.filter(cell => cell === 'x').length;
+        const oCount = line.filter(cell => cell === 'o').length;
+        const emptyCount = line.filter(cell => cell === '').length;
+        
+        // Scoring based on potential
+        if (oCount === 2 && emptyCount === 1) score += 5;
+        if (oCount === 1 && emptyCount === 2) score += 1;
+        if (xCount === 2 && emptyCount === 1) score -= 5;
+        if (xCount === 1 && emptyCount === 2) score -= 1;
+      });
+      
+      // Bonus for center
+      if (board[4] === 'o') score += 3;
+      if (board[4] === 'x') score -= 3;
+      
+      // Bonus for corners
+      const corners = [0, 2, 6, 8];
+      corners.forEach(corner => {
+        if (board[corner] === 'o') score += 2;
+        if (board[corner] === 'x') score -= 2;
+      });
+      
+      return score;
+    }
+    
+    // Check if the current player has won
+    function checkWin(board, player) {
+      let hasWon = false;
+      
+      winningConditions.forEach(condition => {
+        const [a, b, c] = condition;
+        
+        if (board[a] === player && board[b] === player && board[c] === player) {
+          hasWon = true;
+          
+          // Highlight winning cells
+          if (gameActive) {
+            cells[a].classList.add('win');
+            cells[b].classList.add('win');
+            cells[c].classList.add('win');
+          }
+        }
+      });
+      
+      return hasWon;
+    }
+    
+    // Check if the game is a draw
+    function checkDraw() {
+      return board.every(cell => cell !== '');
+    }
+    
+    // End the game
+    function endGame(result) {
+      gameActive = false;
+      boardLocked = false;
+      document.querySelector('.board').classList.remove('ai-turn');
+      
+      if (result === 'player') {
+        statusDisplay.textContent = "Hai vinto!";
+        scores.player++;
+        playerScoreDisplay.textContent = scores.player;
+        
+        // Trigger victory screen with confetti
+        setTimeout(() => {
+          showGameOverScreen("HAI VINTO!", "#00ff00");
+          createConfetti(true);
+        }, 1200);
+      } else if (result === 'ai') {
+        statusDisplay.textContent = "L'AI ha vinto!";
+        scores.ai++;
+        aiScoreDisplay.textContent = scores.ai;
+        
+        setTimeout(() => {
+          showGameOverScreen("HAI PERSO!", "#ff0000");
+          createConfetti(false);
+        }, 1200);
+      } else {
+        statusDisplay.textContent = "Pareggio!";
+        
+        setTimeout(() => {
+          showGameOverScreen("PAREGGIO!", "#ffff00");
+        }, 1200);
+      }
+    }
+    
+    // Show game over screen
+    function showGameOverScreen(message, color) {
+      gameOverText.textContent = message;
+      gameOverText.style.color = color;
+      gameOverScreen.classList.add('active');
+    }
+    
+    // Close game over screen
+    function closeGameOverScreen() {
+      gameOverScreen.classList.remove('active');
+      resetGame();
+    }
+    
+    // Create confetti effect
+    function createConfetti(isWin) {
+      const container = document.body;
+      const confettiCount = isWin ? 200 : 50;
+      const colors = isWin ? 
+        ['#00ff00', '#ffff00', '#00ffff', '#ff00ff'] : 
+        ['#ff0000', '#ff6600', '#ff3300', '#990000'];
+      
+      for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        
+        // Randomize confetti properties
+        const size = Math.random() * 12 + 5;
+        const translateX = Math.random() * 300 - 150;
+        const rotateAmount = Math.random() * 360;
+        
+        // Different shapes
+        if (Math.random() < 0.3) {
+          confetti.style.borderRadius = '50%';
+        } else if (Math.random() < 0.6) {
+          confetti.style.borderRadius = '0';
+        } else {
+          confetti.style.width = `${size / 2}px`;
+          confetti.style.height = `${size}px`;
+          confetti.style.borderRadius = '40% 40% 0 0';
+        }
+        
+        confetti.style.width = `${size}px`;
+        confetti.style.height = `${size}px`;
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.boxShadow = `0 0 10px ${confetti.style.backgroundColor}`;
+        confetti.style.setProperty('--tx', `${translateX}px`);
+        confetti.style.setProperty('--tr', `${rotateAmount}deg`);
+        
+        // Set animation properties
+        confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s forwards`;
+        confetti.style.animationDelay = `${Math.random() * 3}s`;
+        
+        container.appendChild(confetti);
+        
+        // Clean up confetti
+        setTimeout(() => {
+          confetti.remove();
+        }, 5000);
+      }
+    }
+    
+    // Reset game
+    function resetGame() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      gameActive = true;
+      boardLocked = false;
+      
+      cells.forEach(cell => {
+        cell.className = 'cell';
+        
+        // Remove any children (crown, explosion effects)
+        while (cell.firstChild) {
+          cell.removeChild(cell.firstChild);
+        }
+      });
+      
+      document.querySelector('.board').classList.remove('ai-turn');
+      statusDisplay.textContent = "Il tuo turno!";
+    }
+    
+    // Initialize the game
+    initGame();
+  </script>
+</body>
+</html>
